@@ -12,7 +12,7 @@ Lima Game Jam 2015 / Global Game Jam 2015
 - Inkscape 0.48.4
 - Audacity 2.0.5
 - Pinta 1.3
-- iConvert (http://iconverticons.com/)
+- iConvert Icons (http://iconverticons.com/)
 - Trello (https://trello.com/)
 
 ###Global Game Jam Page
