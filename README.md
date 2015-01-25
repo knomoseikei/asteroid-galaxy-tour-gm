@@ -10,6 +10,7 @@ Lima Game Jam 2015 / Global Game Jam 2015
 - GameMaker:Studio
 - Adobe Photoshop CS6
 - Inkscape 0.48.4
+- Audacity 2.0.5
 - Trello
 
 ###Global Game Jam Page
