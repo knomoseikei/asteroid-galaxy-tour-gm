@@ -3,7 +3,7 @@
   <spriteName>&lt;undefined&gt;</spriteName>
   <solid>0</solid>
   <visible>-1</visible>
-  <depth>0</depth>
+  <depth>-1000</depth>
   <persistent>0</persistent>
   <parentName>&lt;undefined&gt;</parentName>
   <maskName>&lt;undefined&gt;</maskName>
@@ -48,10 +48,13 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>if currentState = "Idle" init_situation(currentSituation);
+            <string>
+
+if currentState = "Idle" init_situation(currentSituation);
 
 if currentState = "ResolvingSituation" {
     if resolving &gt; 0 resolving--
+    if resolving == 1 solve_situation();
     if resolving == 0 currentState = "SelectLocation"
 }
 
@@ -66,6 +69,8 @@ if currentState = "SelectLocation" {
         resolving = 1
     }
 }
+
+star_maker();
 </string>
           </argument>
         </arguments>
@@ -90,10 +95,11 @@ if currentState = "SelectLocation" {
             <kind>1</kind>
             <string>draw_set_halign(fa_left);
 draw_set_valign(fa_top);
-draw_set_font(font_targa24);
-draw_set_color(c_white);
+draw_set_font(font_dos24);
+draw_set_color(c_yellow);
 //debugging
-draw_text(x, y, string(currentSituation) + "#" + currentState);
+draw_text(x, y, get_hazard());
+draw_set_color(c_white);
 draw_statUI();
 </string>
           </argument>

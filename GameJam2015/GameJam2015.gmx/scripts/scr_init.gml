@@ -1,7 +1,11 @@
-currentSituation = 0
-currentState = "Idle"
+currentSituation = 0;
+currentState = "Idle";
+currentSituationType = c_empty;
 resolving = 1
 
+repeat (100) {
+    star_maker_on_start();
+}
 scr_script();
 
 button[0] = instance_create(x, y, obj_button);

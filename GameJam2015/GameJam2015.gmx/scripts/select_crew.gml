@@ -1,3 +1,5 @@
+ds_list_clear(crewList);
+
 if obj_spaceship.gunner > 0 {
     repeat (5 * obj_spaceship.gunner) {
         ds_list_add(crewList, "Gunner");
@@ -57,7 +59,7 @@ do {
     ds_list_shuffle(crewList);
     crew[2] = ds_list_find_value(crewList, 0)
 }
-until ((crew[2]!= crew[0] && crew[2]!= crew[1]) || crew[1] = "Devil")
+until ((crew[2]!= crew[0] && crew[2]!= crew[1]) || crew[2] = "Devil")
 
 //void list
 

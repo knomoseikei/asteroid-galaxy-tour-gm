@@ -3,10 +3,10 @@
   <spriteName>spr_ship1</spriteName>
   <solid>0</solid>
   <visible>-1</visible>
-  <depth>0</depth>
+  <depth>-100</depth>
   <persistent>0</persistent>
   <parentName>&lt;undefined&gt;</parentName>
-  <maskName>&lt;undefined&gt;</maskName>
+  <maskName>spr_junk</maskName>
   <events>
     <event eventtype="0" enumb="0">
       <action>
@@ -25,11 +25,12 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>///TEMPORARY CODE PLS REMOVE
-image_xscale = 3;
-image_yscale = 1.5;
+            <string>///Stats
+dying = 0;
+gameover = 0;
+drained = 0;
+deserted = 0;
 
-///Stats
 HP = 5;
 shields = 5;
 weapons = 5;
@@ -38,8 +39,10 @@ spd = 5;
 spdBoost = 0;
 maneuverability = 5;
 maneuverabilityBoost = 0;
-honor = 5;
-energy = 100;
+honor = 0;
+energy = 90 * 30;
+alieninvader = 0;
+martyr = 0;
 
 gunner = 1;
 pilot = 1;
@@ -48,6 +51,251 @@ engineer = 1;
 soldier = 1;
 janitor = 1;
 crew = 1;
+
+//graphics
+preferredX = 320;
+preferredY = 240;
+anim = 0;
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="3" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>if gameover == 0 {
+    preferredX = 299 + ((spd + spdBoost) * 21);
+    
+    if instance_number(obj_planet) == 1 {
+        preferredX = obj_planet.x;
+        preferredY = obj_planet.y;
+        if image_xscale &gt; 0.01 {
+        image_xscale -= 0.01;
+        image_yscale -= 0.01;
+        }
+        if image_xscale &lt; 0.4 &amp;&amp; instance_number(obj_win_screen) == 0 instance_create(room_width, room_height, obj_win_screen);
+    }
+    
+    if preferredX &gt; x then x++;
+    if preferredX &lt; x then x--;
+    
+    if preferredY &gt; y then y++;
+    if preferredY &lt; y then y--;
+    
+    if energy &gt; 0 &amp;&amp; gameover == 0 &amp;&amp; instance_number(obj_planet) == 0 energy--;
+    
+    //shoot at hazard
+    
+    if instance_number(obj_rock_targetted) &gt;= 1 &amp;&amp; obj_control.currentSituationType != c_station &amp;&amp; obj_control.currentSituationType != c_junk {
+        if random(100) &lt; ((obj_spaceship.weapons + obj_spaceship.weaponsBoost) * 2) {
+            audio_play_sound(snd_laser, 10, false);
+            getDirection = point_direction(x, y, obj_rock_targetted.x, obj_rock_targetted.y);
+            missile = instance_create(x + lengthdir_x(10, getDirection), y+ lengthdir_y(10, getDirection) , obj_player_missile);
+            missile.direction = getDirection + random(15) - 7.5;
+            missile.image_angle = missile.direction;
+            missile.speed = 15;
+        }
+    }
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="4" ename="obj_player_missile">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>if other.team = 1 &amp;&amp; gameover == 0 {
+    with (other) {instance_destroy()}
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="4" ename="obj_rock_targetted">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>if gameover == 0 {
+    if other.type == c_asteroids || other.type == c_meteors {
+        other.damage -= floor(maneuverability + maneuverabilityBoost + (weapons + weaponsBoost) / 2)
+        damageNumbers = instance_create(other.x, other.y, obj_explosion);
+        damageNumbers.image_xscale = 1.2;
+        damageNumbers.image_yscale = 1.2;
+        damageNumbers = instance_create(other.x, other.y, obj_damage_number);
+        damageNumbers.damage = other.damage;
+        if other.damage &lt; 0 other.damage = 0;
+        shields -= other.damage
+        if shields &lt; 0 {
+            HP += shields;
+            shields = 0;
+        }
+        with (other) {instance_destroy();}
+    }
+    
+    if other.type == c_pirate_missile {
+        if other.damage &gt; shields {
+            shields -= 2;
+            if shields &lt; 0 {
+                HP += shields;
+                shields = 0;
+                energy -= 300;
+                damageNumbers = instance_create(other.x, other.y, obj_explosion);
+                damageNumbers = instance_create(other.x, other.y, obj_damage_number);
+                damageNumbers.damage = 2;
+                damageNumbers.special = 1;
+            }
+        } else {
+            damageNumbers = instance_create(other.x, other.y, obj_explosion);
+            damageNumbers = instance_create(other.x, other.y, obj_damage_number);
+            damageNumbers.damage = 0;
+        }
+        with (other) {instance_destroy()}
+    }
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="8" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>if dying &lt; 30 {
+if energy &gt; 0 draw_sprite_ext(spr_trail, anim, x, y, image_xscale, image_yscale, 0, c_white, 1)
+anim++;
+if anim &gt;= 4 anim = 0;
+
+draw_self();
+}
+
+if dying &gt; 0 {
+    dying++;
+    gameover = 1;
+    if dying &lt;= 30 {
+        instance_create(x + random(100) - 50, y + random(60) - 30, obj_explosion);
+    }
+    if dying == 30 {
+        audio_play_sound(snd_crowddeath, 10, false);
+    }
+}
+
+if dying &gt; 60 {
+    draw_set_font(font_dos24);
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    draw_set_color(c_red);
+    if dying &lt;= 75 &amp;&amp; dying mod 2 = 0 {
+        draw_sprite_ext(spr_texts, 0, (room_width / 2 - 120), (room_height / 2 - 80), 1, 1, 0, c_white, 1)
+    }
+    if dying &gt; 75 {
+        draw_sprite_ext(spr_texts, 0, (room_width / 2 - 120), (room_height / 2 - 80), 1, 1, 10, c_white, 1)
+    }
+    if (dying &gt; 75 &amp;&amp; dying &lt;= 90) &amp;&amp; dying mod 2 = 1 {
+        draw_sprite_ext(spr_texts, 1, (room_width / 2 + 120), (room_height / 2 + 80), 1, 1, 0, c_white, 1)
+    }
+    if dying &gt; 90 {
+        draw_sprite_ext(spr_texts, 1, (room_width / 2 + 120), (room_height / 2 + 80), 1, 1, -10, c_white, 1)
+    }
+}
+
+if energy &lt;= 0 {
+    drained++;
+    spd = 0;
+    gameover = 1;
+    image_angle += 1;
+    preferredX = 0;
+    if (drained &gt; 30 &amp;&amp; drained &lt;= 45) &amp;&amp; drained mod 2 = 0 {
+        draw_sprite_ext(spr_texts, 4, (room_width / 2 - 120), (room_height / 2 - 80), 1, 1, 0, c_white, 1)
+    }
+    if drained &gt; 45 {
+        draw_sprite_ext(spr_texts, 4, (room_width / 2 - 120), (room_height / 2 - 80), 1, 1, 10, c_white, 1)
+    }
+    if (drained &gt; 45 &amp;&amp; drained &lt;= 60) &amp;&amp; drained mod 2 = 1 {
+        draw_sprite_ext(spr_texts, 5, (room_width / 2 + 120), (room_height / 2 + 80), 1, 1, 0, c_white, 1)
+    }
+    if drained &gt; 60 {
+        draw_sprite_ext(spr_texts, 5, (room_width / 2 + 120), (room_height / 2 + 80), 1, 1, -10, c_white, 1)
+    }
+}
+
+if deserted &gt; 0 {
+    deserted++;
+    gameover = 1;
+    if (deserted &gt; 30 &amp;&amp; deserted &lt;= 45) &amp;&amp; deserted mod 2 = 0 {
+        draw_sprite_ext(spr_texts, 2, (room_width / 2 - 120), (room_height / 2 - 80), 1, 1, 0, c_white, 1)
+    }
+    if deserted &gt; 45 {
+        draw_sprite_ext(spr_texts, 2, (room_width / 2 - 120), (room_height / 2 - 80), 1, 1, 10, c_white, 1)
+    }
+    if (deserted &gt; 45 &amp;&amp; deserted &lt;= 60) &amp;&amp; deserted mod 2 = 1 {
+        draw_sprite_ext(spr_texts, 3, (room_width / 2 + 120), (room_height / 2 + 80), 1, 1, 0, c_white, 1)
+    }
+    if deserted &gt; 60 {
+        draw_sprite_ext(spr_texts, 3, (room_width / 2 + 120), (room_height / 2 + 80), 1, 1, -10, c_white, 1)
+    }
+}
+
+if (dying == 150 || drained == 120 || deserted == 120) &amp;&amp; instance_number(obj_gameover_screen) == 0 {
+    instance_create(0, 0, obj_gameover_screen);
+}
 </string>
           </argument>
         </arguments>

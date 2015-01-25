@@ -3,7 +3,7 @@
   <spriteName>spr_bigButtonMask</spriteName>
   <solid>0</solid>
   <visible>-1</visible>
-  <depth>0</depth>
+  <depth>-100</depth>
   <persistent>0</persistent>
   <parentName>&lt;undefined&gt;</parentName>
   <maskName>&lt;undefined&gt;</maskName>
@@ -26,6 +26,10 @@
           <argument>
             <kind>1</kind>
             <string>enabled = false;
+situationType = c_empty;
+icon[0] = -1;
+icon[1] = -1;
+icon[2] = -1;
 </string>
           </argument>
         </arguments>
@@ -49,11 +53,13 @@
           <argument>
             <kind>1</kind>
             <string>image_index = 0;
+if obj_spaceship.gameover == 0 &amp;&amp; instance_number(obj_planet) == 0 {
 
 if position_meeting(mouse_x, mouse_y, self) {
     image_index = 1;
     if mouse_check_button_released(mb_left) &amp;&amp; obj_control.currentState == "CrewSelection" {
         select_boost();
+        fling_hazard();
         obj_control.currentState = "ResolvingSituation";
         obj_control.resolving = 15;
     }
@@ -63,6 +69,7 @@ if position_meeting(mouse_x, mouse_y, self) {
         obj_control.currentSituation = locationTarget;
         obj_control.resolving = 15;
     }
+}
 }
 </string>
           </argument>
@@ -86,75 +93,102 @@ if position_meeting(mouse_x, mouse_y, self) {
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>if obj_control.currentState == "CrewSelection" {
-    draw_self();
-    
-    if crewType = "Gunner" {
-        if crewPower &lt; 60 {dialog = "Let's shoot!#+3 WP#+1 HN"}
-        if crewPower &gt;= 60 &amp;&amp; crewPower &lt; 90 {dialog = "For the cause!#+2 WP#+2 HN"}
-        if crewPower &gt;= 90 {dialog = "SHOOOT#+1 WP"}
-    }
-    
-    if crewType = "Pilot" {
-        if crewPower &lt; 60 {dialog = "Drive away!#+4 SP#+1 MA"}
-        if crewPower &gt;= 60 &amp;&amp; crewPower &lt; 90 {dialog = "Dodge!#+2 SP#+3 MA"}
-        if crewPower &gt;= 90 {dialog = "FLEE!!#+1 SP#+1 MA"}
-    }
-    
-    if crewType = "Mechanic" {
-        if crewPower &lt; 60 {dialog = "Reinforce the ship!#+3 AR"}
-        if crewPower &gt;= 60 &amp;&amp; crewPower &lt; 90 {dialog = "Fix it!#+2 AR"}
-        if crewPower &gt;= 90 {dialog = "Something's broken!#+1 AR"}
-    }
-    
-    if crewType = "Engineer" {
-        if crewPower &lt; 60 {dialog = "Harden the ship#+5 SH"}
-        if crewPower &gt;= 60 &amp;&amp; crewPower &lt; 90 {dialog = "Better get cover#+4 SH"}
-        if crewPower &gt;= 90 {dialog = "Hope they miss~#+2 SH"}
-    }
-    
-    if crewType = "Soldier" {
-        if crewPower &lt; 60 {dialog = "Kill'em with fire!#Kill Alien#+2 WP"}
-        if crewPower &gt;= 60 &amp;&amp; crewPower &lt; 90 {dialog = "Defend the ship!#Kill Alien#+1 HN#He dies"}
-        if crewPower &gt;= 90 {dialog = "CHAAARGE#Kill Alien#He Dies"}
-    }
-    
-    if crewType = "Crew" {
-        if crewPower &lt; 60 {dialog = "+2 to all"}
-        if crewPower &gt;= 60 &amp;&amp; crewPower &lt; 90 {dialog = "+1 to all"}
-        if crewPower &gt;= 90 {dialog = "Fuck this shit#Does Nothing"}
-    }
-    
-    if crewType = "Devil" {
-        if crewPower &lt; 60 {dialog = "Eject someone#+2 to all#-2 HN"}
-        if crewPower &gt;= 60 &amp;&amp; crewPower &lt; 90 {dialog = "+1 to all"}
-        if crewPower &gt;= 90 {dialog = "-1 HN"}
-    }
-    
-    if crewType = "Janitor" {
-        if crewPower &lt; 60 {dialog = "Janitor #1"}
-        if crewPower &gt;= 60 &amp;&amp; crewPower &lt; 90 {dialog = "Janitor #2"}
-        if crewPower &gt;= 90 {dialog = "Janitor #3"}
-    }
-    
-    draw_set_font(font_targa24);
-    draw_set_valign(fa_top);
-    draw_set_halign(fa_left);
-    draw_text(x, y-240, crewType);
-    draw_text(x, y-210, dialog);
-}
+            <string>if obj_spaceship.gameover = 0 &amp;&amp; instance_number(obj_planet) == 0 {
 
-if obj_control.currentState == "SelectLocation" {
-//TEMPSHITPLS REMOVE
-    if enabled == false image_index = 3
-    draw_self();
-    //END OF TEMPSHIT
-    if enabled == true {
-        draw_set_font(font_targa24);
-        draw_set_valign(fa_top);
+    if obj_control.currentState == "CrewSelection" {
+        if image_index == 0 color = make_color_hsv(0, 0, 196);
+        if image_index == 1 color = make_color_hsv(0, 0, 255);
+        
+        if crewType == "Gunner" {
+            draw_sprite_ext(spr_crew, 0, x, y, 1, 1, 0, color, 1);
+            if crewPower &lt; 60 {dialog = "FIRE!#   +3#   +1"; set_icons(-1, 3, 6)}
+            if crewPower &gt;= 60 &amp;&amp; crewPower &lt; 90 {dialog = "For the cause!#   +2#   +2"; set_icons(-1, 3, 6)}
+            if crewPower &gt;= 90 {dialog = "SHOOOT#+1 WP"; set_icons(-1, -1, 3)}
+        }
+        
+        if crewType == "Pilot" {
+            draw_sprite_ext(spr_crew, 4, x, y, 1, 1, 0, color, 1);
+            if crewPower &lt; 60 {dialog = "Drive away!#   +4#   +1"; set_icons(-1, 4, 2)}
+            if crewPower &gt;= 60 &amp;&amp; crewPower &lt; 90 {dialog = "Dodge!#   +2#   +3"; set_icons(-1, 4, 2)}
+            if crewPower &gt;= 90 {dialog = "FLEE!!#   +1#   +1"; set_icons(-1, 4, 2)}
+        }
+        
+        if crewType == "Mechanic" {
+            draw_sprite_ext(spr_crew, 2, x, y, 1, 1, 0, color, 1);
+            if crewPower &lt; 60 {dialog = "Reinforce the ship!#   +3"; set_icons(-1, -1, 5)}
+            if crewPower &gt;= 60 &amp;&amp; crewPower &lt; 90 {dialog = "Fix it!#   +2"; set_icons(-1, -1, 5)}
+            if crewPower &gt;= 90 {dialog = "Something's broken!#   +1"; set_icons(-1, -1, 5)}
+        }
+        
+        if crewType == "Engineer" {
+            draw_sprite_ext(spr_crew, 3, x, y, 1, 1, 0, color, 1);
+            if crewPower &lt; 60 {dialog = "Harden the ship#   +5"; set_icons(-1, -1, 1)}
+            if crewPower &gt;= 60 &amp;&amp; crewPower &lt; 90 {dialog = "Better get cover#   +4"; set_icons(-1, -1, 1)}
+            if crewPower &gt;= 90 {dialog = "Hope they miss~#   +2"; set_icons(-1, -1, 1)}
+        }
+        
+        if crewType == "Soldier" {
+            draw_sprite_ext(spr_crew, 1, x, y, 1, 1, 0, color, 1);
+            if crewPower &lt; 60 {dialog = "Kill'em with fire!#Kill Alien#   +2"; set_icons(-1, -1, 3)}
+            if crewPower &gt;= 60 &amp;&amp; crewPower &lt; 90 {dialog = "Defend the ship!#Kill Alien#   +1#but he dies..."; set_icons(-1, 6, -1)}
+            if crewPower &gt;= 90 {dialog = "CHAAARGE#and get killed..."; set_icons(-1, -1, -1)}
+        }
+        
+        if crewType == "Crew" {
+            draw_sprite_ext(spr_crew, 5, x, y, 1, 1, 0, color, 1);
+            if crewPower &lt; 60 {dialog = "Do your best!#+1 to various stats"; set_icons(-1, -1, -1)} 
+            if crewPower &gt;= 60 &amp;&amp; crewPower &lt; 90 {dialog = "We must survive!#   +1#   +1#   +1"; set_icons(4, 2, 3)}
+            if crewPower &gt;= 90 {dialog = "We must panic!#and do nothing..."; set_icons(-1, -1, -1)}
+        }
+        
+        if crewType == "Devil" {
+            draw_sprite_ext(spr_crew, 7, x, y, 1, 1, 0, color, 1);
+            if crewPower &lt; 60 {dialog = "Eject someone#something good#MIGHT happen"; set_icons(-1, -1, -1)}
+            if crewPower &gt;= 60 &amp;&amp; crewPower &lt; 90 {dialog = "Embrace#your dark side#   -2#   -2"; set_icons(-1, 4, 2)}
+            if crewPower &gt;= 90 {dialog = "What does that shiny#red button do?"; set_icons(-1, -1, -1)}
+        }
+        
+        if crewType == "Janitor" {
+            draw_sprite_ext(spr_crew, 6, x, y, 1, 1, 0, color, 1);
+            if crewPower &lt; 60 {dialog = "I need to clean outside"; set_icons(-1, -1, -1)}
+            if crewPower &gt;= 60 &amp;&amp; crewPower &lt; 90 {dialog = "Can we get lunch?"; set_icons(-1, -1, -1)}
+            if crewPower &gt;= 90 {dialog = "This control panel looks#super dusty!"; set_icons(-1, -1, -1)}
+        }
+        
+        draw_set_font(font_dos24);
+        draw_set_valign(fa_bottom);
         draw_set_halign(fa_left);
-        draw_text(x, y-240, locationDescription);
+        draw_set_color(c_black);
+        if crewType != "Devil" draw_text(x+12, y+2, crewType);
+        draw_set_color(c_white);
+        if crewType != "Devil"  draw_text(x+10, y, crewType);
+        draw_set_font(font_dos18);
+        draw_set_color(c_black);
+        draw_text(x+12, y-33, dialog);
+        draw_set_color(c_white);
+        draw_text(x+10, y-35, dialog);
+        for (var i = 0; i &lt; 3; i++) {
+            if icon[i] &gt;= 0 draw_sprite_ext(spr_icons, icon[i], x + 15, y - 110 + (i * 24), 0.18, 0.18, 0, c_white, 1);
+        }
+        
+        
     }
+    
+    if obj_control.currentState == "SelectLocation" {
+        if enabled == true {
+            if image_index == 0 color = make_color_hsv(0, 0, 196);
+            if image_index == 1 color = make_color_hsv(0, 0, 255);
+            draw_sprite_ext(spr_cautionSign, 0, x, y, 1, 1, 0, color, 1);
+            draw_set_font(font_arial18);
+            draw_set_color(c_black);
+            draw_set_valign(fa_middle);
+            draw_set_halign(fa_center);
+            draw_text_ext(x + 170 , y - 110, locationDescription, 32, 290);
+        } else {
+            draw_sprite(spr_cautionSign, 1, x, y);
+        }
+    }
+    
 }
 </string>
           </argument>

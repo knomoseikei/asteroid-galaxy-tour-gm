@@ -4,13 +4,41 @@
     <Config>Configs\Default</Config>
   </Configs>
   <NewExtensions/>
-  <sounds name="sound"/>
+  <sounds name="sound">
+    <sound>sound\bgm_dashfast</sound>
+    <sound>sound\snd_death</sound>
+    <sound>sound\snd_explosion</sound>
+    <sound>sound\snd_powerup</sound>
+    <sound>sound\snd_laser</sound>
+    <sound>sound\snd_explosionA</sound>
+    <sound>sound\snd_explosionB</sound>
+    <sound>sound\snd_aliendeath</sound>
+    <sound>sound\snd_crowddeath</sound>
+  </sounds>
   <sprites name="sprites">
     <sprite>sprites\spr_ship1</sprite>
     <sprite>sprites\spr_bigButtonMask</sprite>
+    <sprite>sprites\spr_star</sprite>
+    <sprite>sprites\spr_icons</sprite>
+    <sprite>sprites\spr_energy</sprite>
+    <sprite>sprites\spr_meteor</sprite>
+    <sprite>sprites\spr_crew</sprite>
+    <sprite>sprites\spr_junk</sprite>
+    <sprite>sprites\spr_trail</sprite>
+    <sprite>sprites\spr_fire</sprite>
+    <sprite>sprites\spr_cautionSign</sprite>
+    <sprite>sprites\spr_explosion</sprite>
+    <sprite>sprites\spr_pirate_ship</sprite>
+    <sprite>sprites\spr_alien_ship</sprite>
+    <sprite>sprites\spr_station</sprite>
+    <sprite>sprites\spr_endings</sprite>
+    <sprite>sprites\spr_small_things</sprite>
+    <sprite>sprites\spr_texts</sprite>
+    <sprite>sprites\spr_planet</sprite>
   </sprites>
   <backgrounds name="background">
     <background>background\background0</background>
+    <background>background\bg_intro</background>
   </backgrounds>
   <paths name="paths"/>
   <scripts name="scripts">
@@ -19,20 +47,46 @@
     <script>scripts\init_situation.gml</script>
     <script>scripts\draw_statUI.gml</script>
     <script>scripts\select_crew.gml</script>
-    <script>scripts\init_location.gml</script>
     <script>scripts\select_boost.gml</script>
+    <script>scripts\init_location.gml</script>
     <script>scripts\ship_check.gml</script>
     <script>scripts\debuff_ship.gml</script>
+    <script>scripts\star_maker.gml</script>
+    <script>scripts\star_maker_on_start.gml</script>
+    <script>scripts\solve_situation.gml</script>
+    <script>scripts\get_hazard.gml</script>
+    <script>scripts\kill_random_crew.gml</script>
+    <script>scripts\fling_hazard.gml</script>
+    <script>scripts\set_icons.gml</script>
+    <script>scripts\eject_person.gml</script>
   </scripts>
   <fonts name="fonts">
     <font>fonts\font_targa24</font>
+    <font>fonts\font_targa_18</font>
+    <font>fonts\font_dos24</font>
+    <font>fonts\font_dos18</font>
+    <font>fonts\font_arial18</font>
   </fonts>
   <objects name="objects">
     <object>objects\obj_control</object>
     <object>objects\obj_spaceship</object>
     <object>objects\obj_button</object>
+    <object>objects\obj_bgStar</object>
+    <object>objects\obj_rock_decoration</object>
+    <object>objects\obj_rock_targetted</object>
+    <object>objects\obj_damage_number</object>
+    <object>objects\obj_player_missile</object>
+    <object>objects\obj_explosion</object>
+    <object>objects\obj_energy_boost</object>
+    <object>objects\obj_astronaut</object>
+    <object>objects\obj_ejected</object>
+    <object>objects\obj_gameover_screen</object>
+    <object>objects\obj_win_screen</object>
+    <object>objects\obj_intro_ship</object>
+    <object>objects\obj_planet</object>
   </objects>
   <rooms name="rooms">
+    <room>rooms\rm_start</room>
     <room>rooms\rm_game</room>
   </rooms>
   <help>

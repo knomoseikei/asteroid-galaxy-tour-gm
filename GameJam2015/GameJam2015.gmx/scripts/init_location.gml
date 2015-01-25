@@ -5,3 +5,4 @@ for (var i = 0; i < 3; i++) {
 }
 
 debuff_ship();
+show_debug_message("Debuffing");
