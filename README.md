@@ -11,7 +11,9 @@ Lima Game Jam 2015 / Global Game Jam 2015
 - Adobe Photoshop CS6
 - Inkscape 0.48.4
 - Audacity 2.0.5
-- Trello
+- Pinta 1.3
+- iConvert (http://iconverticons.com/)
+- Trello (https://trello.com/)
 
 ###Global Game Jam Page
 - http://globalgamejam.org/2015/games/asteroid-galaxy-tour
