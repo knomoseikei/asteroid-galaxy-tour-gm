@@ -19,10 +19,10 @@ Lima Game Jam 2015 / Global Game Jam 2015
 - http://globalgamejam.org/2015/games/asteroid-galaxy-tour
 
 ####Web Version (Play Online)
-https://dl.dropboxusercontent.com/u/6401158/AGT/index.html
+- https://dl.dropboxusercontent.com/u/6401158/AGT/index.html
 
 ####Windows Version (Executable)
-http://ggj.s3.amazonaws.com/games/2015/01/25/1402/agt-gamejam2015-exe.zip
+- http://ggj.s3.amazonaws.com/games/2015/01/25/1402/agt-gamejam2015-exe.zip
 
 ####Android Version (Google Play Store)
-https://play.google.com/store/apps/details?id=com.navigator.gamejam2015
+- https://play.google.com/store/apps/details?id=com.navigator.gamejam2015
